@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 #  Visual-wheel odometry and LiDAR SLAM
 This work aims to imporve the odometry accuracy by fusing wheel odometry, visual odometry and imu as optional on the EKF framework.  Using cartographer with the fused odometry to build a good gridmap for localization.   [ORB_SLAM3](https://github.com/UZ-SLAMLab/ORB_SLAM3),  [cartographer](https://github.com/cartographer-project/cartographer) and [robot_pose_ekf](https://github.com/ros-planning/robot_pose_ekf) are used for visual odometry, LiDAR SLAM and sensor fusion. [Kalibr](https://github.com/ethz-asl/kalibr) is used for camera calibration.
 The test environment is Ubuntu 18.04, ROS melodic.
@@ -87,8 +86,3 @@ $ rosrun cartographer_ros cartographer_pbstream_to_ros_map -map_filestem=/PATH/p
 
 
 
-
-
-=======
-# masterarbeit
->>>>>>> 0e85885d989d28d44a6b1f2ba9daadb794250a96
