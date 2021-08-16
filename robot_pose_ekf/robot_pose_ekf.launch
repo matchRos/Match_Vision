@@ -1,0 +1,25 @@
+<launch>
+
+<node pkg="robot_pose_ekf" type="robot_pose_ekf" name="robot_pose_ekf">
+  <param name="output_frame" value="odom_combined35"/>
+  <param name="base_footprint_frame" value="base_footprint35"/>
+  <param name="freq" value="22.0"/>
+  <param name="sensor_timeout" value="5.0"/>  
+  <param name="odom_used" value="true"/>
+  <param name="imu_used" value="false"/>
+  <param name="vo_used" value="true"/>
+
+  <remap from="odom" to="/odom" />
+  <remap from="imu_data" to="/camera/imu" />
+  <remap from="vo" to="/odom_orb"/>
+</node>
+
+<node pkg="pub_odom" type="pose2odom.py" name="pub_odom">
+</node>
+
+<include file="$(find orb_launch)/launch/orb_slam3_rgbd.launch"/>
+
+<!--node pkg="orb_launch" type="orb_launch" name="orb_launch" /--> 
+
+</launch>
+

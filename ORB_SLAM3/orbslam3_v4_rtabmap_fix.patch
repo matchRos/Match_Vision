@@ -1,0 +1,79 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 3c731bb..469f555 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -9,8 +9,6 @@ MESSAGE("Build type: " ${CMAKE_BUILD_TYPE})
+ 
+ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}  -Wall   -O3")
+ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall   -O3")
+-set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -march=native")
+-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -march=native")
+ 
+ # set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wno-deprecated -O3 -march=native ")
+ # set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wno-deprecated -O3 -march=native")
+diff --git a/Thirdparty/DBoW2/CMakeLists.txt b/Thirdparty/DBoW2/CMakeLists.txt
+index c561724..a5c1c8e 100644
+--- a/Thirdparty/DBoW2/CMakeLists.txt
++++ b/Thirdparty/DBoW2/CMakeLists.txt
+@@ -1,8 +1,8 @@
+ cmake_minimum_required(VERSION 2.8)
+ project(DBoW2)
+ 
+-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}  -Wall  -O3 -march=native ")
+-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall  -O3 -march=native")
++set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}  -Wall")
++set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
+ 
+ set(HDRS_DBOW2
+   DBoW2/BowVector.h
+diff --git a/Thirdparty/g2o/CMakeLists.txt b/Thirdparty/g2o/CMakeLists.txt
+index fa3e1e3..bbb243b 100644
+--- a/Thirdparty/g2o/CMakeLists.txt
++++ b/Thirdparty/g2o/CMakeLists.txt
+@@ -54,8 +54,6 @@ IF(OPENMP_FOUND AND G2O_USE_OPENMP)
+ ENDIF(OPENMP_FOUND AND G2O_USE_OPENMP)
+ 
+ # Compiler specific options for gcc
+-SET(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -march=native")
+-SET(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -O3 -march=native")
+ # SET(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3")
+ # SET(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -O3")
+ 
+diff --git a/src/CameraModels/KannalaBrandt8.cpp b/src/CameraModels/KannalaBrandt8.cpp
+index 6876ad5..6842e96 100644
+--- a/src/CameraModels/KannalaBrandt8.cpp
++++ b/src/CameraModels/KannalaBrandt8.cpp
+@@ -531,6 +531,6 @@ namespace ORB_SLAM3 {
+ 
+         cv::SVD::compute(A,w,u,vt,cv::SVD::MODIFY_A| cv::SVD::FULL_UV);
+         cv::Matx41f x3D_h = vt.row(3).t();
+-        x3D = x3D_h.get_minor<3,1>(0,0) / x3D_h(3);
++        x3D = x3D_h.get_minor<3,1>(0,0) * (1.0f/x3D_h(3));
+     }
+ }
+diff --git a/src/LocalMapping.cc b/src/LocalMapping.cc
+index effa4e1..819efda 100644
+--- a/src/LocalMapping.cc
++++ b/src/LocalMapping.cc
+@@ -625,7 +625,7 @@ void LocalMapping::CreateNewMapPoints()
+                     continue;
+ 
+                 // Euclidean coordinates
+-                x3D = x3D_h.get_minor<3,1>(0,0) / x3D_h(3);
++                x3D = x3D_h.get_minor<3,1>(0,0) * (1.0f/x3D_h(3));
+                 bEstimated = true;
+ 
+             }
+diff --git a/src/Tracking.cc b/src/Tracking.cc
+index 3ecefeb..ecdb6eb 100644
+--- a/src/Tracking.cc
++++ b/src/Tracking.cc
+@@ -946,7 +946,7 @@ bool Tracking::ParseCamParamFile(cv::FileStorage &fSettings)
+         std::cerr << "Check an example configuration file with the desired sensor" << std::endl;
+     }
+ 
+-    if(mSensor==System::STEREO || mSensor==System::IMU_STEREO)
++    if(mSensor==System::STEREO || mSensor==System::RGBD || mSensor==System::IMU_STEREO)
+     {
+         cv::FileNode node = fSettings["Camera.bf"];
+         if(!node.empty() && node.isReal())

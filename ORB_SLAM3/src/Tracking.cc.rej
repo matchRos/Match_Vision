@@ -1,0 +1,10 @@
+diff a/src/Tracking.cc b/src/Tracking.cc	(rejected hunks)
+@@ -946,7 +946,7 @@ bool Tracking::ParseCamParamFile(cv::FileStorage &fSettings)
+         std::cerr << "Check an example configuration file with the desired sensor" << std::endl;
+     }
+ 
+-    if(mSensor==System::STEREO || mSensor==System::IMU_STEREO)
++    if(mSensor==System::STEREO || mSensor==System::RGBD || mSensor==System::IMU_STEREO)
+     {
+         cv::FileNode node = fSettings["Camera.bf"];
+         if(!node.empty() && node.isReal())
